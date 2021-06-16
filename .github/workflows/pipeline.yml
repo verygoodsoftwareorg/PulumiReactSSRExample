@@ -1,0 +1,30 @@
+name: Build and Release
+on: [push]
+jobs:
+  buildJs:
+    name: Build JavaScript
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Build Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - run: yarn --cwd ui install
+      - run: yarn --cwd ui build
+      - name: Upload Output
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifacts
+          path: ui/build
