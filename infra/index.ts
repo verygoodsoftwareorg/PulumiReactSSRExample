@@ -20,7 +20,7 @@ const crawlDirectory = (dir: string, f: (_: string) => void): void => {
 
 // Create an AWS resource (S3 Bucket)
 const contentBucket = new aws.s3.Bucket("static-site-bucket", {
-    bucket: "static-site-bucket",
+    bucket: "examples.verygood.dev",
     acl: "public-read",
     website: {
         indexDocument: "index.html",
@@ -28,8 +28,7 @@ const contentBucket = new aws.s3.Bucket("static-site-bucket", {
     }
 });
 
-const webContentsRootPath = path.join(process.cwd(), "../ui/build/");
-
+const webContentsRootPath = path.join(process.cwd(), "../artifacts");
 
 crawlDirectory(webContentsRootPath, filePath => {
     const relativeFilePath = filePath.replace(webContentsRootPath + "/", "");
