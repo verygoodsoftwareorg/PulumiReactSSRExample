@@ -42,10 +42,8 @@ jobs:
           aws-region: eu-west-1
           aws-secret-access-key: ${{ secrets.ACCESS_KEY_SECRET }}
       - run: yarn --cwd infra
-      - uses: pulumi/actions@v3
-        with:
-          command: up
-          stack-name: verygoodsoftware/dev
-          work-dir: infra
+      - uses: actions/setup-node@v2
+      - run: yarn --cwd ui install
+      - run: yarn --cwd infra ts-node build.ts -- up
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
